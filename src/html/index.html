@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- Script for the event handlers    -->
+</head>
+
+<body>
+    <!--header and navigation-->
+    <header>
+        <h3>Tea pot </h3>
+        <nav id="menu" class="gradient">
+            <ul class="horizontal">
+                <li>
+                    <a href="home.php">Home</a>
+                </li>
+                <li>
+                    <a href="login.php">Log in</a>
+                </li>
+                <li>
+                    <a href="signup.php">Sign up</a>
+                </li>
+            </ul>
+        </nav>
+        <h3>Sign Up</h3>
+
+
+        <p>Please enter your username and desired password to sign up for an account.</p>
+        <p id="error"></p>
+        <form id="valForm" method="post">
+            <table>
+                <tr>
+                    <th style="text-align:left;">Username: </th>
+                    <td>
+                        <input type="text" id="username" name="username" />
+                    </td>
+                </tr>
+                <tr>
+                    <th style="text-align:left;">Password: </th>
+                    <td>
+                        <input type="password" id="password1" name="password1" />
+                    </td>
+                </tr>
+                <tr>
+                    <th style="text-align:left;">Re-enter Password: </th>
+                    <td>
+                        <input type="password" id="password2" name="password2" />
+                    </td>
+                </tr>
+                <tr>
+                    <th style="text-align:left;">Email: </th>
+                    <td>
+                        <input type="text" id="email" name="email" />
+                    </td>
+                </tr>
+            </table>
+            <input type="submit" value="Sign Up" name="submit" />
+        </form>
+</body>
+
+</html>

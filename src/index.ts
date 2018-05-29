@@ -1,6 +1,5 @@
 import express from 'express';
 import { Request, Response, NextFunction } from 'express';
-import { pizzaRouter } from './routers/pizza-router';
 import bodyParser from 'body-parser';
 import { usersRouter } from './routers/users-router';
 import { reimbursementRouter } from './routers/reimbursement-router';
@@ -26,7 +25,6 @@ app.use(bodyParser.json());
 *
 *****************************************************************************/
 
-app.use('/pizzas', pizzaRouter);
 app.use('/users', usersRouter);
 app.use('/reimbursements', reimbursementRouter);
 

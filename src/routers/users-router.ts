@@ -3,6 +3,12 @@ import { Request, Response, NextFunction } from 'express';
 
 export const usersRouter = express.Router();
 
+let passwordHash = require('password-hash');
+
+var bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+
 let users = [
     {
         username: 'smcross',
@@ -18,7 +24,15 @@ let users = [
         firstName: 'Jim',
         lastName: 'Jam',
         email: 'jimjam@email.com',
-        role: 'customer'
+        role: 'employee'
+    },
+    {
+        username: 'admin',
+        password: 'admin',
+        firstName: 'Admin',
+        lastName: 'Admin',
+        email: 'admin@email.com',
+        role: 'admin'
     }
 ];
 
@@ -51,13 +65,31 @@ usersRouter.post('', (req: Request, resp: Response) => {
     } else {
         const u = {
             username: req.body.username,
-            password: req.body.password,
+            password: passwordHash.generate(req.body.password),//passwordHash.generate(req.body.password),
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             email: req.body.email,
             role: req.body.role
         }
+        console.log(u.password);
         users.push(u);
         resp.sendStatus(201);
     }
+
+});
+
+usersRouter.post('/login', (req: Request, resp: Response) => {
+    if (!req.body.username || !req.body.password) {
+        resp.sendStatus(400);
+    } else {
+
+        for (let u of users) {
+            if (req.body.username === u.username && passwordHash.verify(req.body.password, u.password)) {
+                console.log(`Logged In.`);
+                resp.sendStatus(200);
+            }
+        }
+    }
+    // resp.sendStatus(418);
+    console.log(`couldn't login`);
 });
