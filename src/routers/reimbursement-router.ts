@@ -1,5 +1,6 @@
 import express from 'express';
 import { Request, Response, NextFunction } from 'express';
+import * as reimbursementService from '../services/reimbursement-services'
 
 export const reimbursementRouter = express.Router();
 
@@ -53,4 +54,26 @@ reimbursementRouter.get('/status/:status', (req: Request, resp: Response) => {
         }
     }
     resp.json(rStatus);
-})
+});
+
+reimbursementRouter.post('/add-reimbursement', (req, resp, next) => {
+    const reimbursement = req.body && req.body;
+
+    const r = {
+        username: reimbursement.username,
+        timeSubmitted: Date.now(),
+        items: reimbursement.items,
+        approver: reimbursement.approver,
+        status: reimbursement.status
+    }
+
+    reimbursementService.saveReimbursement(r)
+            .then(data => {
+                console.log(`user: ${r.username} was added a reimbursement ticket.`);
+                resp.sendStatus(200);
+            })
+            .catch(err => {
+                console.log(err);
+                resp.sendStatus(500);
+            });
+});
