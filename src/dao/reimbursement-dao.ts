@@ -41,3 +41,43 @@ export function saveReimbursement(reimbursement): Promise<any> {
         Item: reimbursement
     }).promise();
 }
+
+export function getEmployeeReimbursement(username: string): Promise<any> {
+    return docClient.query({
+        TableName: 'reimbursements',
+        KeyConditionExpression: 'username = :username',
+        ExpressionAttributeValues: {
+            ':username': username,
+        }
+    }).promise();
+}
+
+export function getReimbursementByStatus(status: string): Promise<any> {
+    return docClient.query({
+        TableName: 'reimbursements',
+        IndexName: 'status-index',
+        KeyConditionExpression: '#status = :status',
+        ExpressionAttributeNames: {
+            '#status': 'status'
+        },
+        ExpressionAttributeValues: {
+            ':status': status,
+        }
+    }).promise();
+}
+
+export function updateStatus(status: string, username: string, approver: string, timeSubmitted: number): Promise<any> {
+    return docClient.update({
+        TableName: 'reimbursements',
+        Key: {
+            'username': ':username',
+            'timeSubmitted': ':timeSubmitted'
+        },
+        UpdateExpression: 'set status = :status',
+        ExpressionAttributeValues: {
+            ':username': username,
+            ':timeSubmitted': timeSubmitted,
+            ':status' : status
+        }
+    }).promise();
+}

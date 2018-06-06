@@ -1,6 +1,7 @@
 export function authMiddleware(...allowedRoles: string[]) {
   return (req, resp, next) => {
     const role = req.session && req.session.role;
+    console.log(role);
     if (role) {
       if (allowedRoles.some(allowedRole => role === allowedRole)) {
         next(); // allow the call to continue on to the next middleware to process the request

@@ -96,6 +96,8 @@ usersRouter.post('/login', (req: Request, resp: Response) => {
             .then(data => {
                 if (req.body.password === data.Items[0].password) {
                     console.log('Logged in')
+                    req.session.role = data.Items[0].role;
+                    req.session.username = data.Items[0].username;
                     resp.send(data.Items[0]);
                 } else {
                     console.log('Incorrect password.');
