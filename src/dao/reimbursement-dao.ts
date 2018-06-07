@@ -10,13 +10,12 @@ const awsConfig: ConfigurationOptions = {
 aws.config.update(awsConfig);
 
 const dynamodb = new aws.DynamoDB();
-const docClient = new aws.DynamoDB.DocumentClient(); //subset of functionallity
+const docClient = new aws.DynamoDB.DocumentClient(); 
 
 export function createUserTable() {
     dynamodb.createTable({
         TableName: 'reimbursements',
         KeySchema: [
-            // Need to change to match user table in database
             { AttributeName: 'username', KeyType: 'HASH' }
         ],
         AttributeDefinitions: [
@@ -70,13 +69,15 @@ export function updateStatus(status: string, username: string, approver: string,
     return docClient.update({
         TableName: 'reimbursements',
         Key: {
-            'username': ':username',
-            'timeSubmitted': ':timeSubmitted'
+            'username': username,
+            'timeSubmitted': timeSubmitted
         },
-        UpdateExpression: 'set status = :status',
+        UpdateExpression: 'set #status = :status, approver = :approver',
+        ExpressionAttributeNames: {
+            '#status': 'status'
+        },
         ExpressionAttributeValues: {
-            ':username': username,
-            ':timeSubmitted': timeSubmitted,
+            ':approver': approver,
             ':status' : status
         }
     }).promise();

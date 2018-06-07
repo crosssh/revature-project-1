@@ -32,7 +32,7 @@ function addReimbursment(reimbursement) {
     const row = document.createElement('tr'); // create <tr>
     let data = document.createElement('td'); // create <td>
     let option = document.createElement('option');
-    
+
     data.innerText = reimbursement.username; // assign value to the td
     row.appendChild(data); // append the td to the row
     data = document.createElement('td');
@@ -44,50 +44,55 @@ function addReimbursment(reimbursement) {
     data = document.createElement('td');
     //data.innerText = reimbursement.status;
     let select = document.createElement('select');
-    select.setAttribute('id', 'select');
-    select.options.add(new Option(reimbursement.status, reimbursement.status, false, true))
-    let option = select.options.add(new Option('approved', 'approved', false, false));
-    option.setAttribute('id', 'approved');
-    option = select.options.add(new Option('denied', 'denied', false, false));
-    option.setAttribute('id', 'denied');
+    select.setAttribute('name', 'select');
+    select.options.add(new Option(reimbursement.status, reimbursement.status, true, true));
+    select.options.add(new Option('approved', 'approved', false, false));
+    select.options.add(new Option('denied', 'denied', false, false));
     data.appendChild(select);
 
     row.appendChild(data);
     body.appendChild(row); // append the row to the body
-    document.getElementById('select').addEventListener('change', updateStatus(this));
 }
 
 function updateStatus(status) {
+    const selects = document.getElementsByName('select');
+    const tr = document.getElementsByTagName('tr');
+    let i = 0;
 
-//     const username = document.getElementById('username-input').value;
-//     const password = document.getElementById('password-input').value;
+    for (let select of selects) {
+        let options = select.getElementsByTagName('option');
+        for (let option of options) {
+            if (option.selected && option.text !== 'pending') {
+                console.log(`username: ${tr[i + 1].cells[0].textContent} time${tr[i + 1].cells[1].textContent} ${option.text}`);
+                let status = {
+                    username: tr[i + 1].cells[0].textContent,
+                    timeSubmitted: tr[i + 1].cells[1].textContent,
+                    status: option.text,
 
-//     const credential = {username, password}; 
+                };
 
-//     fetch('http://localhost:3000/users/login', {
-//     body: JSON.stringify(credential),
-//     headers: {
-//       'content-type': 'application/json'
-//     },
-//     credentials: 'include',
-//     method: 'POST'
-//   })
-//   .then(resp => {
-//     console.log(resp.status)
-//     if (resp.status === 401) {
-//       throw 'Invalid Credentials';
-//     }
-//     if (resp.status === 200) {
-//       console.log('in resp === 200')
-//       return resp.json();
-//     }
-//     throw 'Unable to login at this time, please try again later';
-//   })
-//   .then(data => {
-//     console.log('here');
-//     window.location = '../home/index.html';
-//   })
-//   .catch(err => {
-//     document.getElementById('error-message').innerText = err;
-//   })
+                fetch('http://localhost:3000/reimbursements/update-status', {
+                    body: JSON.stringify(status),
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    credentials: 'include',
+                    method: 'POST'
+                })
+                    .then(resp => {
+                        if (resp.status === 200) {
+                            return resp.json();
+                        }
+                        throw 'Unable to update status';
+                    })
+                    .then(data => {
+                        return;
+                    })
+                    .catch(err => {
+                        return;
+                    })
+            }
+        }
+        i++;
+    }
 }

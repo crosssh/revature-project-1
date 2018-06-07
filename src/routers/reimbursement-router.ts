@@ -55,7 +55,6 @@ reimbursementRouter.get('/status/:status', [
         console.log(`getting the reimbursements for status: ${status}`);
         reimbursementService.getReimbursmentByStatus(status)
             .then(data => {
-                console.log(data);
                 resp.json(data.Items);
             })
             .catch(err => {
@@ -69,7 +68,7 @@ reimbursementRouter.post('/add-reimbursement', (req, resp, next) => {
     const reimbursement = req.body && req.body;
 
     const r = {
-        username: req.session.username,//req.session.username,
+        username: req.session.username,
         timeSubmitted: Date.now(),
         items: reimbursement.items,
         approver: reimbursement.approver,
@@ -88,9 +87,9 @@ reimbursementRouter.post('/add-reimbursement', (req, resp, next) => {
 });
 
 reimbursementRouter.post('/update-status', (req, resp) => {
-    const approver = req.body.approver;
+    const approver = req.session.username;
     const username = req.body.username;
-    const timeSubmitted = req.body.timeSubmitted;
+    const timeSubmitted = parseInt(req.body.timeSubmitted);
     const status = req.body.status;
 
     reimbursementService.updateStatus(status, username, approver, timeSubmitted)
