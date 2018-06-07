@@ -5,50 +5,6 @@ import { findUser } from '../dao/user-dao';
 
 export const usersRouter = express.Router();
 
-let passwordHash = require('password-hash');
-
-var bcrypt = require('bcrypt');
-const saltRounds = 10;
-
-
-let users = [
-    {
-        username: 'smcross',
-        password: 'password',
-        firstName: 'Shawn',
-        lastName: 'Cross',
-        email: 'smcross@email.com',
-        role: 'employee'
-    },
-    {
-        username: 'jimjam',
-        password: 'pass',
-        firstName: 'Jim',
-        lastName: 'Jam',
-        email: 'jimjam@email.com',
-        role: 'employee'
-    },
-    {
-        username: 'admin',
-        password: 'admin',
-        firstName: 'Admin',
-        lastName: 'Admin',
-        email: 'admin@email.com',
-        role: 'admin'
-    }
-];
-
-usersRouter.get('', (req: Request, resp: Response, next: NextFunction) => {
-    console.log(`retrieving all users`);
-    resp.json(users);
-});
-
-usersRouter.get('/username', (req: Request, resp: Response) => {
-    console.log(`getting usernames`);
-    let usernames = users.map((u) => u.username);
-    resp.json(usernames);
-});
-
 usersRouter.get('/username/:username', (req: Request, resp: Response) => {
     const username = req.params.username
     console.log(`getting usernames ${username}`);

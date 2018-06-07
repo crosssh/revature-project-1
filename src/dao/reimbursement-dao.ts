@@ -10,7 +10,7 @@ const awsConfig: ConfigurationOptions = {
 aws.config.update(awsConfig);
 
 const dynamodb = new aws.DynamoDB();
-const docClient = new aws.DynamoDB.DocumentClient(); 
+const docClient = new aws.DynamoDB.DocumentClient();
 
 export function createUserTable() {
     dynamodb.createTable({
@@ -51,16 +51,19 @@ export function getEmployeeReimbursement(username: string): Promise<any> {
     }).promise();
 }
 
-export function getReimbursementByStatus(status: string): Promise<any> {
+export function getReimbursementByStatus(status: string, username: string): Promise<any> {
     return docClient.query({
         TableName: 'reimbursements',
         IndexName: 'status-index',
         KeyConditionExpression: '#status = :status',
+        FilterExpression: '#username <> :username',
         ExpressionAttributeNames: {
-            '#status': 'status'
+            '#status': 'status',
+            '#username': 'username'
         },
         ExpressionAttributeValues: {
             ':status': status,
+            ':username': username,
         }
     }).promise();
 }
@@ -78,7 +81,7 @@ export function updateStatus(status: string, username: string, approver: string,
         },
         ExpressionAttributeValues: {
             ':approver': approver,
-            ':status' : status
+            ':status': status
         }
     }).promise();
 }

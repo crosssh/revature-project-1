@@ -31,13 +31,12 @@ function submitTicket() {
   const amount = document.getElementById('amount-input').value;
   const time = document.getElementById('time-input').value;
   const description = document.getElementById('description-input').value;
-
   const numItems = document.getElementById('items-table').rows.length;
 
   let items = [];
   let item;
 
-  for(let i = 0; i < numItems; i++) {
+  for (let i = 0; i < numItems; i++) {
     item = {
       'title': document.getElementById('items-table').rows[i].cells[0],
       'amount': parseInt(document.getElementById('items-table').rows[i].cells[1]),
@@ -64,21 +63,19 @@ function submitTicket() {
     method: 'POST'
   })
     .then(resp => {
-      console.log(resp.status)
       if (resp.status === 401) {
         throw 'Invalid Credentials';
       }
       if (resp.status === 200) {
         console.log('in resp === 200')
-        return resp.json();
+        return resp.status;
       }
-      throw 'Unable to login at this time, please try again later';
+      throw 'Unable to submit the ticket';
     })
     .then(data => {
-      console.log('here');
-      window.location = '../reimbursements/add-reimbursement';
+      window.location = '../home/index.html';
     })
     .catch(err => {
-      document.getElementById('error-message').innerText = err;
+      console.log(err);
     })
 }

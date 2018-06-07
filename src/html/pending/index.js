@@ -1,4 +1,3 @@
-// import { Recoverable } from "repl";
 
 function getEmployeeReimbursments() {
     fetch('http://localhost:3000/reimbursements/status/pending', { credentials: 'include' })
@@ -10,11 +9,9 @@ function getEmployeeReimbursments() {
             return resp.json();
         })
         .then((reimbursements) => {
-            // clear table
             const body = document.getElementById('reimbursement-table-body');
             body.innerHTML = '';
 
-            // populate the table for each movie
             reimbursements.forEach(addReimbursment);
         })
         .catch(err => {
@@ -29,12 +26,12 @@ window.onload = getEmployeeReimbursments;
 function addReimbursment(reimbursement) {
     const body = document.getElementById('reimbursement-table-body');
 
-    const row = document.createElement('tr'); // create <tr>
-    let data = document.createElement('td'); // create <td>
+    const row = document.createElement('tr');
+    let data = document.createElement('td');
     let option = document.createElement('option');
 
-    data.innerText = reimbursement.username; // assign value to the td
-    row.appendChild(data); // append the td to the row
+    data.innerText = reimbursement.username; 
+    row.appendChild(data); 
     data = document.createElement('td');
     data.innerText = reimbursement.timeSubmitted;
     row.appendChild(data);
@@ -42,7 +39,6 @@ function addReimbursment(reimbursement) {
     data.innerText = reimbursement.approver;
     row.appendChild(data);
     data = document.createElement('td');
-    //data.innerText = reimbursement.status;
     let select = document.createElement('select');
     select.setAttribute('name', 'select');
     select.options.add(new Option(reimbursement.status, reimbursement.status, true, true));
@@ -51,10 +47,10 @@ function addReimbursment(reimbursement) {
     data.appendChild(select);
 
     row.appendChild(data);
-    body.appendChild(row); // append the row to the body
+    body.appendChild(row); 
 }
 
-function updateStatus(status) {
+function updateStatus() {
     const selects = document.getElementsByName('select');
     const tr = document.getElementsByTagName('tr');
     let i = 0;
@@ -81,15 +77,15 @@ function updateStatus(status) {
                 })
                     .then(resp => {
                         if (resp.status === 200) {
-                            return resp.json();
+                            return;
                         }
                         throw 'Unable to update status';
                     })
                     .then(data => {
-                        return;
+                        return window.location = './index.html';;
                     })
                     .catch(err => {
-                        return;
+                        console.log(err);
                     })
             }
         }

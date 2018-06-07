@@ -5,41 +5,10 @@ import { authMiddleware } from '../security/auth-middleware';
 
 export const reimbursementRouter = express.Router();
 
-let reimbursements = [
-    {
-        username: 'jimjam',
-        timeSubmitted: Date.now(),
-        items: [
-            'title1', 50, 'thist was an reimbursement', Date.now()
-        ],
-        approver: 'smcross',
-        status: 'approved'
-    },
-    {
-        username: 'bigGuy',
-        timeSubmitted: Date.now(),
-        items: [
-            'title1', 50, 'thist was an reimbursement', Date.now()
-        ],
-        approver: 'smcross',
-        status: 'approved'
-    },
-    {
-        username: 'littleGuy',
-        timeSubmitted: Date.now(),
-        items: [
-            'title1', 50, 'thist was an reimbursement', Date.now()
-        ],
-        approver: 'smcross',
-        status: 'denied'
-    },
-]
-
 reimbursementRouter.get('/username', (req: Request, resp: Response) => {
     console.log(`getting reimbursement for ${req.session.username}.`);
     reimbursementService.getEmployeeReimbursement(req.session.username)
         .then(data => {
-            console.log(data.Items);
             resp.json(data.Items);
         })
         .catch(err => {
@@ -53,7 +22,7 @@ reimbursementRouter.get('/status/:status', [
     (req, resp, next) => {
         const status = req.params.status;
         console.log(`getting the reimbursements for status: ${status}`);
-        reimbursementService.getReimbursmentByStatus(status)
+        reimbursementService.getReimbursmentByStatus(status, req.session.username)
             .then(data => {
                 resp.json(data.Items);
             })
@@ -78,7 +47,7 @@ reimbursementRouter.post('/add-reimbursement', (req, resp, next) => {
     reimbursementService.saveReimbursement(r)
         .then(data => {
             console.log(`user: ${r.username} has added a reimbursement ticket.`);
-            resp.sendStatus(200);
+            resp.send(data.Items);
         })
         .catch(err => {
             console.log(err);
@@ -93,11 +62,11 @@ reimbursementRouter.post('/update-status', (req, resp) => {
     const status = req.body.status;
 
     reimbursementService.updateStatus(status, username, approver, timeSubmitted)
-    .then(data => {
-        resp.sendStatus(200);
-    })
-    .catch(err => {
-        console.log(err);
-        resp.sendStatus(418);
-    })
+        .then(data => {
+            resp.sendStatus(200);
+        })
+        .catch(err => {
+            console.log(err);
+            resp.sendStatus(418);
+        })
 })

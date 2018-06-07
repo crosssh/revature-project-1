@@ -8,8 +8,8 @@ export function getEmployeeReimbursement(username: string) {
     return reimbursementDao.getEmployeeReimbursement(username);
 }
 
-export function getReimbursmentByStatus(status: string) {
-    return reimbursementDao.getReimbursementByStatus(status);
+export function getReimbursmentByStatus(status: string, username: string) {
+    return reimbursementDao.getReimbursementByStatus(status, username);
 }
 
 export function updateStatus(status: string, username: string ,approver: string, timeSubmitted: number) {
