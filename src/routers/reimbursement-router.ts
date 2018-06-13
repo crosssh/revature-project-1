@@ -35,6 +35,9 @@ reimbursementRouter.get('/status/:status', [
 
 reimbursementRouter.post('/add-reimbursement', (req, resp, next) => {
     const reimbursement = req.body && req.body;
+    console.log(req.body);
+    console.log(req.session.username);
+
 
     const r = {
         username: req.session.username,
@@ -43,10 +46,12 @@ reimbursementRouter.post('/add-reimbursement', (req, resp, next) => {
         approver: reimbursement.approver,
         status: reimbursement.status
     }
+    console.log(r)
 
     reimbursementService.saveReimbursement(r)
         .then(data => {
             console.log(`user: ${r.username} has added a reimbursement ticket.`);
+            console.log(`item returned ${data.Itesm}`)
             resp.send(data.Items);
         })
         .catch(err => {

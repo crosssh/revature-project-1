@@ -17,6 +17,14 @@ usersRouter.get('/username/:username', (req: Request, resp: Response) => {
         });
 });
 
+usersRouter.get('/sign-out',(req, resp) => {
+    req.session.destroy(err => {
+        console.log('signing out');
+    });
+
+    resp.status;
+})
+
 usersRouter.post('', (req: Request, resp: Response) => {
     console.log(`adding user: ${JSON.stringify(req.body)} to users`);
     if (!req.body.username || !req.body.password || !req.body.firstName || !req.body.lastName

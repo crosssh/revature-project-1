@@ -9,7 +9,7 @@ import * as reimbursementDao from './dao/reimbursement-dao';
 
 const app = express();
 
-const port = 3000;
+const port = 3001;
 app.set('port', port);
 
 
@@ -37,8 +37,17 @@ app.use((req: Request, resp: Response, next: NextFunction) => {
     next();
 });
 
-
 app.use(bodyParser.json());
+
+app.use((req, resp, next) => {
+    (process.env.MOVIE_API_STAGE === 'prod')
+      ? resp.header('Access-Control-Allow-Origin', process.env.DEMO_APP_URL)
+      : resp.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    resp.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    resp.header('Access-Control-Allow-Credentials', 'true');
+    next();
+  });
+
 /*****************************************************************************
 *
 *****************************************************************************/
